@@ -1,0 +1,253 @@
+/* Reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(ellipse at bottom, #0d1b2a, #000);
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Wrapper */
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  padding: 20px;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Stars */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  box-shadow: 0 0 6px #fff, 0 0 12px #0ff;
+  animation: flicker-star 2s infinite alternate;
+  opacity: 0.9;
+}
+@keyframes flicker-star {
+  0%   { opacity: 0.8; transform: scale(1); }
+  50%  { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.7; transform: scale(1); }
+}
+
+/* Moon */
+.moon {
+  position: absolute;
+  top: 8%;
+  right: 10%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #aaa);
+  box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.3);
+  z-index: 1;
+}
+
+/* Aurora (Northern Lights) */
+.aurora {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60vh;
+  background: radial-gradient(ellipse at center, rgba(0,255,150,0.2), transparent 70%),
+              radial-gradient(ellipse at center, rgba(0,200,255,0.15), transparent 60%);
+  animation: auroraMotion 10s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+  z-index: 0;
+  pointer-events: none;
+}
+@keyframes auroraMotion {
+  0%   { transform: translateY(0) scaleX(1); opacity: 0.5; }
+  100% { transform: translateY(-20px) scaleX(1.2); opacity: 0.7; }
+}
+button {
+  padding: 10px;
+  background: #00e0ff;
+  color: black;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px #00e0ff, 0 0 20px #00e0ff;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform 0.5s, opacity 1s;
+  opacity: 0;
+  pointer-events: none;
+}
+.toggle-auth {
+  margin-top: 15px;
+  color: #ccc;
+  font-size: 14px;
+  text-align: center;
+}
+
+.toggle-auth span {
+  color: #00e0ff;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.toggle-auth span:hover {
+  color: #fff;
+}
+.switch-auth {
+  margin-top: 20px;
+  color: #ffffffcc;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.3s;
+  text-shadow: 0 0 5px #fff, 0 0 10px #a0f, 0 0 15px #0ff;
+}
+
+.switch-auth:hover {
+  color: #ffffff;
+  transform: scale(1.05);
+  text-decoration: underline;
+}
+
+button:hover {
+  background: #00b3cc;
+  transform: scale(1.03);
+  box-shadow: 0 0 15px #00f7ff, 0 0 25px #00f7ff;
+}
+
+button:active::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  transition: 0s;
+}
+
+/* Meteor */
+.meteor {
+  position: absolute;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, white, rgba(255, 255, 255, 0));
+  animation: meteorFly linear forwards;
+}
+@keyframes meteorFly {
+  from {
+    transform: translateX(0) translateY(0) rotate(-45deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-300px) translateY(300px) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+/* Card */
+.card {
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+/* Glitch Text */
+.glitch-text {
+  font-size: 2.5rem;
+  color: #fff;
+  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;
+  animation: flicker 2s infinite alternate;
+}
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 0 0 4px #0ff, 0 0 11px #0ff, 0 0 19px #0ff;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+input {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+}
+button {
+  padding: 10px;
+  background: #00e0ff;
+  color: black;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #00b3cc;
+}
+
+/* Divider */
+.divider {
+  color: white;
+  margin: 15px 0;
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card {
+    padding: 20px;
+  }
+  .glitch-text {
+    font-size: 2rem;
+  }
+}
+@keyframes moonPulse {
+  0% { box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.3); }
+  50% { box-shadow: 0 0 40px 20px rgba(255, 255, 255, 0.4); }
+  100% { box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.3); }
+}
+.moon {
+  animation: moonPulse 6s infinite ease-in-out;
+}  
