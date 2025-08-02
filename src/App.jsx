@@ -4,19 +4,12 @@ import './styles.css';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import confetti from 'canvas-confetti';
-import axiosInstance from './utils/axios'; // axios with baseURL + credentials
+import axiosInstance from './utils/axios';
 
 function App() {
   const [isSignup, setIsSignup] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [meteors, setMeteors] = useState([]);
-
-  const stars = Array.from({ length: 80 }, () => ({
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    size: `${Math.random() * 2 + 1}px`,
-    duration: `${Math.random() * 3 + 2}s`,
-  }));
+  const [arrows, setArrows] = useState([]);
 
   const fireworkBurst = () => {
     const duration = 1000;
@@ -33,7 +26,7 @@ function App() {
         ...defaults,
         particleCount: 50,
         origin: { x: Math.random(), y: Math.random() * 0.5 },
-        colors: ['#ff3cac', '#784ba0', '#2b86c5'],
+        colors: ['#ff8c00', '#ffa500', '#f44336'],
       });
     }, 200);
   };
@@ -50,7 +43,7 @@ function App() {
 
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 } });
       fireworkBurst();
-      alert(`Welcome ${user.name}!`);
+      alert(`Welcome, warrior ${user.name}!`);
       setEmailSubmitted(true);
     } catch (error) {
       console.error('❌ Google OAuth failed:', error);
@@ -65,12 +58,12 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setMeteors((prev) => [
+      setArrows((prev) => [
         ...prev,
         {
           id: Math.random(),
           left: Math.random() * window.innerWidth,
-          top: Math.random() * window.innerHeight * 0.3,
+          top: Math.random() * window.innerHeight * 0.4,
           duration: Math.random() * 2 + 1,
         },
       ]);
@@ -80,41 +73,19 @@ function App() {
 
   return (
     <div className="page-wrapper">
-      {/* 🌌 Stars Background */}
-      <div className="stars">
-        {stars.map((star, index) => (
-          <div
-            key={index}
-            className="star"
-            style={{
-              left: star.left,
-              top: star.top,
-              width: star.size,
-              height: star.size,
-              animationDuration: star.duration,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* 🌈 Aurora */}
-      <div className="aurora" />
-
-      {/* ☄️ Meteors */}
-      {meteors.map((meteor) => (
+      {/* Battlefield Background Elements */}
+      <div className="smoke" />
+      {arrows.map((a) => (
         <div
-          key={meteor.id}
-          className="meteor"
+          key={a.id}
+          className="arrow"
           style={{
-            left: `${meteor.left}px`,
-            top: `${meteor.top}px`,
-            animationDuration: `${meteor.duration}s`,
+            left: `${a.left}px`,
+            top: `${a.top}px`,
+            animationDuration: `${a.duration}s`,
           }}
         />
       ))}
-
-      {/* 🟣 Neon Orb */}
-      <div className="neon-orb" />
 
       {/* 🔐 Auth Card */}
       <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05}>
@@ -124,24 +95,24 @@ function App() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="glitch-text">{isSignup ? 'Sign Up' : 'Login'}</h1>
+          <h1 className="glitch-text">{isSignup ? 'Join the Legion' : 'Warrior Login'}</h1>
 
           {!emailSubmitted ? (
             <form className="form" onSubmit={handleEmailSubmit}>
-              <input type="email" placeholder="Email Address" required />
-              <button type="submit">Continue with Email</button>
+              <input type="email" placeholder="Battle ID (Email)" required />
+              <button type="submit">Proceed</button>
             </form>
           ) : isSignup ? (
             <form className="form">
-              <input type="text" placeholder="Full Name" required />
-              <input type="password" placeholder="Password" required />
+              <input type="text" placeholder="Warrior Name" required />
+              <input type="password" placeholder="Create Password" required />
               <input type="password" placeholder="Confirm Password" required />
-              <button type="submit">Sign Up</button>
+              <button type="submit">Enlist</button>
             </form>
           ) : (
             <form className="form">
-              <input type="password" placeholder="Password" required />
-              <button type="submit">Login</button>
+              <input type="password" placeholder="Enter Password" required />
+              <button type="submit">Enter Arena</button>
             </form>
           )}
 
@@ -159,10 +130,8 @@ function App() {
               setEmailSubmitted(false);
             }}
           >
-            {isSignup
-              ? 'Already have an account? '
-              : 'Don’t have an account? '}
-            <span>{isSignup ? 'Login' : 'Sign up'}</span>
+            {isSignup ? 'Already enlisted? ' : 'New to the battle? '}
+            <span>{isSignup ? 'Login' : 'Join'}</span>
           </p>
         </motion.div>
       </Tilt>
