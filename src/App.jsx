@@ -4,6 +4,7 @@ import './styles.css';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import confetti from 'canvas-confetti';
+import axiosInstance from './utils/axios'; // axios with baseURL + credentials
 
 function App() {
   const [isSignup, setIsSignup] = useState(false);
@@ -37,10 +38,24 @@ function App() {
     }, 200);
   };
 
-  const handleLoginSuccess = () => {
-    confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 } });
-    fireworkBurst();
-    alert('Google OAuth Success!');
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const res = await axiosInstance.post('/auth/google-login', {
+        credential: credentialResponse.credential,
+      });
+
+      const { token, user } = res.data;
+      localStorage.setItem('token', token);
+      console.log('✅ Logged in user:', user);
+
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 } });
+      fireworkBurst();
+      alert(`Welcome ${user.name}!`);
+      setEmailSubmitted(true);
+    } catch (error) {
+      console.error('❌ Google OAuth failed:', error);
+      alert('Login failed');
+    }
   };
 
   const handleEmailSubmit = (e) => {
@@ -65,7 +80,7 @@ function App() {
 
   return (
     <div className="page-wrapper">
-      {/* ✨ Background effects */}
+      {/* 🌌 Stars Background */}
       <div className="stars">
         {stars.map((star, index) => (
           <div
@@ -81,21 +96,27 @@ function App() {
           />
         ))}
       </div>
+
+      {/* 🌈 Aurora */}
       <div className="aurora" />
-      <div className="moon" />
+
+      {/* ☄️ Meteors */}
       {meteors.map((meteor) => (
         <div
           key={meteor.id}
           className="meteor"
           style={{
-            left: meteor.left,
-            top: meteor.top,
+            left: `${meteor.left}px`,
+            top: `${meteor.top}px`,
             animationDuration: `${meteor.duration}s`,
           }}
         />
       ))}
 
-      {/* 🔐 Auth card */}
+      {/* 🟣 Neon Orb */}
+      <div className="neon-orb" />
+
+      {/* 🔐 Auth Card */}
       <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05}>
         <motion.div
           className="card"
@@ -105,49 +126,44 @@ function App() {
         >
           <h1 className="glitch-text">{isSignup ? 'Sign Up' : 'Login'}</h1>
 
-          {/* Email Form */}
           {!emailSubmitted ? (
             <form className="form" onSubmit={handleEmailSubmit}>
               <input type="email" placeholder="Email Address" required />
               <button type="submit">Continue with Email</button>
             </form>
+          ) : isSignup ? (
+            <form className="form">
+              <input type="text" placeholder="Full Name" required />
+              <input type="password" placeholder="Password" required />
+              <input type="password" placeholder="Confirm Password" required />
+              <button type="submit">Sign Up</button>
+            </form>
           ) : (
-            isSignup && (
-              <form className="form">
-                <input type="text" placeholder="Full Name" required />
-                <input type="password" placeholder="Password" required />
-                <input type="password" placeholder="Confirm Password" required />
-                <button type="submit">Sign Up</button>
-              </form>
-            )
+            <form className="form">
+              <input type="password" placeholder="Password" required />
+              <button type="submit">Login</button>
+            </form>
           )}
 
           <div className="divider">OR</div>
 
           <GoogleLogin
-            onSuccess={() => {
-              handleLoginSuccess();
-              setEmailSubmitted(true);
-            }}
+            onSuccess={handleGoogleSuccess}
             onError={() => alert('Google OAuth Failed!')}
           />
 
-          {/* 🔁 Toggle login/signup */}
-          {!isSignup ? (
-            <p className="switch-auth" onClick={() => {
-              setIsSignup(true);
+          <p
+            className="switch-auth"
+            onClick={() => {
+              setIsSignup(!isSignup);
               setEmailSubmitted(false);
-            }}>
-              Don’t have an account? <span>Sign up</span>
-            </p>
-          ) : (
-            <p className="switch-auth" onClick={() => {
-              setIsSignup(false);
-              setEmailSubmitted(false);
-            }}>
-              Already have an account? <span>Login</span>
-            </p>
-          )}
+            }}
+          >
+            {isSignup
+              ? 'Already have an account? '
+              : 'Don’t have an account? '}
+            <span>{isSignup ? 'Login' : 'Sign up'}</span>
+          </p>
         </motion.div>
       </Tilt>
     </div>
