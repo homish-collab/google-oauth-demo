@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
 
 body, html {
   margin: 0;
@@ -9,9 +9,9 @@ body, html {
   background-position: bottom;
   background-size: cover;
   background-repeat: no-repeat;
-  
-  height: 10vh;
-  overflow: hidden;
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
   color: #e0e0e0;
 }
 
@@ -20,7 +20,7 @@ body, html {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  width:100vw;
+  width: 100vw;
   position: relative;
   padding: 20px;
   overflow: hidden;
@@ -43,82 +43,318 @@ body, html {
   to { transform: translateY(-30px); opacity: 0.6; }
 }
 
+/* Arrow animations */
+.arrow {
+  position: absolute;
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(to bottom, #ff8c00, transparent);
+  transform: rotate(45deg);
+  animation: arrowFall linear forwards;
+  z-index: 1;
+}
 
+@keyframes arrowFall {
+  from {
+    transform: rotate(45deg) translateY(-20px);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(45deg) translateY(100vh);
+    opacity: 0;
+  }
+}
 
 .card {
   z-index: 2;
-  background: rgba(20, 20, 20, 0.75);
-  border: 1px solid rgba(255, 100, 0, 0.4);
-  border-radius: 12px;
-  padding: 30px;
-  max-width: 400px;
+  background: rgba(20, 20, 20, 0.85);
+  border: 1px solid rgba(255, 140, 0, 0.4);
+  border-radius: 16px;
+  padding: 35px;
+  max-width: 450px;
   width: 100%;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 0 20px rgba(255, 80, 0, 0.2);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 30px rgba(255, 80, 0, 0.3);
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 .glitch-text {
   font-size: 2.5rem;
   color: #ff8c00;
-  text-shadow: 0 0 5px #ff4500, 0 0 15px #ff6347;
+  text-shadow: 0 0 10px #ff4500, 0 0 20px #ff6347;
+  margin-bottom: 25px;
+  font-weight: 700;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 18px;
+  margin-top: 25px;
 }
+
 input {
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 140, 0, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
   font-size: 1rem;
   outline: none;
+  transition: all 0.3s ease;
+  font-family: 'Cinzel', serif;
 }
+
+input:focus {
+  border-color: #ff8c00;
+  background: rgba(255, 140, 0, 0.1);
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 button {
-  padding: 10px;
-  background: #ff8c00;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #ff8c00, #ffa500);
   color: #000;
   font-weight: bold;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-family: 'Cinzel', serif;
+  box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
 }
+
 button:hover {
-  background: #cc6e00;
+  background: linear-gradient(135deg, #e07600, #e6940a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+}
+
+button:active {
+  transform: translateY(0);
 }
 
 .divider {
-  margin: 15px 0;
+  margin: 20px 0;
   color: #ccc;
   opacity: 0.6;
+  font-weight: 600;
+}
+
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
 }
 
 .switch-auth {
-  margin-top: 20px;
+  margin-top: 25px;
   color: #ffcc99;
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: color 0.3s, transform 0.3s;
+  transition: all 0.3s ease;
   text-shadow: 0 0 5px #ff8c00, 0 0 10px #ffcc66;
 }
+
 .switch-auth:hover {
   color: #fff;
   transform: scale(1.05);
   text-decoration: underline;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .card {
-    padding: 20px;
+.switch-auth span {
+  color: #ff8c00;
+  font-weight: 600;
+}
+
+/* Dashboard Styles */
+.user-info {
+  background: rgba(255, 140, 0, 0.1);
+  border: 1px solid rgba(255, 140, 0, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 25px 0;
+  text-align: left;
+}
+
+.user-info h2 {
+  color: #ff8c00;
+  margin: 0 0 15px 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.user-info p {
+  margin: 8px 0;
+  color: #ccc;
+  font-size: 0.95rem;
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.action-btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #ff8c00, #ffa500);
+  color: #000;
+}
+
+.action-btn.secondary {
+  background: rgba(255, 140, 0, 0.1);
+  color: #ff8c00;
+  border: 1px solid rgba(255, 140, 0, 0.5);
+}
+
+.action-btn.secondary:hover {
+  background: rgba(255, 140, 0, 0.2);
+  border-color: #ff8c00;
+}
+
+.logout-btn {
+  background: rgba(255, 71, 87, 0.2);
+  color: #ff6b7a;
+  border: 1px solid rgba(255, 71, 87, 0.4);
+  margin-top: 20px;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 71, 87, 0.3);
+  border-color: #ff4757;
+  color: #fff;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Error states */
+.error {
+  border-color: #ff4757 !important;
+  background: rgba(255, 71, 87, 0.1) !important;
+}
+
+.error-text {
+  color: #ff6b7a;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.success-text {
+  color: #2ed573;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-wrapper {
+    padding: 15px;
   }
+  
+  .card {
+    padding: 25px 20px;
+    max-width: 100%;
+  }
+  
   .glitch-text {
     font-size: 2rem;
+  }
+  
+  .user-info {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 20px 15px;
+  }
+  
+  .glitch-text {
+    font-size: 1.7rem;
+  }
+  
+  input, button {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .user-info h2 {
+    font-size: 1.3rem;
+  }
+  
+  .user-info p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #ff8c00;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card {
+    border-width: 2px;
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  input {
+    border-width: 2px;
   }
 } 
