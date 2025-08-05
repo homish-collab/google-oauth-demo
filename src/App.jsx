@@ -8,8 +8,17 @@ import axiosInstance from './utils/axios';
 
 function App() {
   const [isSignup, setIsSignup] = useState(false);
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [arrows, setArrows] = useState([]);
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    fullName: '',
+    collegeName: '',
+    rollNumber: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   const fireworkBurst = () => {
     const duration = 1000;
@@ -39,21 +48,72 @@ function App() {
 
       const { token, user } = res.data;
       localStorage.setItem('token', token);
-      console.log('✅ Logged in user:', user);
+      setLoggedInUser(user);
 
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.7 } });
       fireworkBurst();
-      alert(`Welcome, warrior ${user.name}!`);
-      setEmailSubmitted(true);
     } catch (error) {
       console.error('❌ Google OAuth failed:', error);
       alert('Login failed');
     }
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
-    setEmailSubmitted(true);
+    if (formData.password !== formData.confirmPassword) {
+      return alert('Passwords do not match!');
+    }
+    try {
+      const res = await axiosInstance.post('/auth/signup', {
+        email: formData.email,
+        username: formData.username,
+        fullName: formData.fullName,
+        collegeName: formData.collegeName,
+        rollNumber: formData.rollNumber,
+        password: formData.password,
+      });
+
+      localStorage.setItem('token', res.data.token);
+      setLoggedInUser(res.data.user);
+      fireworkBurst();
+    } catch (error) {
+      console.error('❌ Registration failed:', error);
+      alert(error.response?.data?.message || 'Registration failed');
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axiosInstance.post('/auth/login', {
+        email: formData.email,
+        password: formData.password,
+      });
+      localStorage.setItem('token', res.data.token);
+      setLoggedInUser(res.data.user);
+      fireworkBurst();
+    } catch (error) {
+      console.error('❌ Login failed:', error);
+      alert(error.response?.data?.message || 'Login failed');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setLoggedInUser(null);
+    setFormData({
+      email: '',
+      username: '',
+      fullName: '',
+      collegeName: '',
+      rollNumber: '',
+      password: '',
+      confirmPassword: '',
+    });
   };
 
   useEffect(() => {
@@ -73,7 +133,6 @@ function App() {
 
   return (
     <div className="page-wrapper">
-      {/* Battlefield Background Elements */}
       <div className="smoke" />
       {arrows.map((a) => (
         <div
@@ -87,7 +146,6 @@ function App() {
         />
       ))}
 
-      {/* 🔐 Auth Card */}
       <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05}>
         <motion.div
           className="card"
@@ -95,44 +153,57 @@ function App() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="glitch-text">{isSignup ? 'Join the Legion' : 'Warrior Login'}</h1>
-
-          {!emailSubmitted ? (
-            <form className="form" onSubmit={handleEmailSubmit}>
-              <input type="email" placeholder="Battle ID (Email)" required />
-              <button type="submit">Proceed</button>
-            </form>
-          ) : isSignup ? (
-            <form className="form">
-              <input type="text" placeholder="Warrior Name" required />
-              <input type="password" placeholder="Create Password" required />
-              <input type="password" placeholder="Confirm Password" required />
-              <button type="submit">Enlist</button>
-            </form>
+          {/* If logged in, show details */}
+          {loggedInUser ? (
+            <div className="user-details">
+              <h1 className="glitch-text">Welcome, {loggedInUser.fullName}</h1>
+              <p><strong>Username:</strong> {loggedInUser.username}</p>
+              <p><strong>Email:</strong> {loggedInUser.email}</p>
+              <p><strong>College:</strong> {loggedInUser.collegeName}</p>
+              {loggedInUser.rollNumber && (
+                <p><strong>Roll No:</strong> {loggedInUser.rollNumber}</p>
+              )}
+              <button onClick={handleLogout}>Logout</button>
+            </div>
           ) : (
-            <form className="form">
-              <input type="password" placeholder="Enter Password" required />
-              <button type="submit">Enter Arena</button>
-            </form>
+            <>
+              <h1 className="glitch-text">{isSignup ? 'Register' : 'Login'}</h1>
+
+              {isSignup ? (
+                <form className="form" onSubmit={handleRegister}>
+                  <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+                  <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
+                  <input type="text" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
+                  <input type="text" name="collegeName" placeholder="College Name" value={formData.collegeName} onChange={handleChange} required />
+                  <input type="text" name="rollNumber" placeholder="Roll Number (optional)" value={formData.rollNumber} onChange={handleChange} />
+                  <input type="password" name="password" placeholder="Create Password" value={formData.password} onChange={handleChange} required />
+                  <input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} required />
+                  <button type="submit">Register</button>
+                </form>
+              ) : (
+                <form className="form" onSubmit={handleLogin}>
+                  <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+                  <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+                  <button type="submit">Login</button>
+                </form>
+              )}
+
+              <div className="divider">OR</div>
+
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => alert('Google OAuth Failed!')}
+              />
+
+              <p
+                className="switch-auth"
+                onClick={() => setIsSignup(!isSignup)}
+              >
+                {isSignup ? 'Already have an account?' : 'New here? '}
+                <span>{isSignup ? 'Login' : 'Join'}</span>
+              </p>
+            </>
           )}
-
-          <div className="divider">OR</div>
-
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => alert('Google OAuth Failed!')}
-          />
-
-          <p
-            className="switch-auth"
-            onClick={() => {
-              setIsSignup(!isSignup);
-              setEmailSubmitted(false);
-            }}
-          >
-            {isSignup ? 'Already enlisted? ' : 'New to the battle? '}
-            <span>{isSignup ? 'Login' : 'Join'}</span>
-          </p>
         </motion.div>
       </Tilt>
     </div>
