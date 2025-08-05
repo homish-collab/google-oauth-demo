@@ -4,15 +4,14 @@ body, html {
   margin: 0;
   padding: 0;
   font-family: 'Cinzel', serif;
-  background: #0f0f0f;
-  background-image: url('https://i.pinimg.com/736x/18/a8/a3/18a8a3a42f6fb3f4026fb6cf600e0123.jpg');
-  background-position: bottom;
+  /* background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ721i_KDKPjR4dDfnyuQYobFSzPqbXuX-HA&s'); */
   background-size: cover;
+ background-image: url("bg3.jpg");
+ width:100vw;
   background-repeat: no-repeat;
-  
-  height: 10vh;
   overflow: hidden;
   color: #e0e0e0;
+  
 }
 
 .page-wrapper {
@@ -20,7 +19,7 @@ body, html {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  width:100vw;
+  width: 100vw;
   position: relative;
   padding: 20px;
   overflow: hidden;
@@ -34,24 +33,32 @@ body, html {
   left: 0;
   width: 120%;
   height: 100%;
-  background: radial-gradient(ellipse at center, rgba(70, 70, 70, 0.2), transparent 70%);
+  background: radial-gradient(
+    ellipse at center, 
+    rgba(255, 182, 193, 0.9), /* light pink */
+    transparent 70%
+  );
   animation: smokeDrift 15s ease-in-out infinite alternate;
   z-index: 0;
+
+  /* Added blend & opacity from your snippet */
+  mix-blend-mode: normal;
+  opacity: 0.4;
 }
+
 @keyframes smokeDrift {
   from { transform: translateY(0); opacity: 0.3; }
   to { transform: translateY(-30px); opacity: 0.6; }
 }
 
-
-
 .card {
   z-index: 2;
-  background: rgba(20, 20, 20, 0.75);
+  position: relative;
   border: 1px solid rgba(255, 100, 0, 0.4);
   border-radius: 12px;
   padding: 30px;
   max-width: 400px;
+  background:linear-gradient(135deg, rgb(219 147 120 / 38%), rgb(0 0 0 / 57%),  rgba(44, 83, 100, 0.6));
   width: 100%;
   backdrop-filter: blur(6px);
   box-shadow: 0 0 20px rgba(255, 80, 0, 0.2);
@@ -70,6 +77,7 @@ body, html {
   gap: 15px;
   margin-top: 20px;
 }
+
 input {
   padding: 10px 15px;
   border-radius: 8px;
@@ -77,6 +85,7 @@ input {
   font-size: 1rem;
   outline: none;
 }
+
 button {
   padding: 10px;
   background: #ff8c00;
@@ -87,6 +96,7 @@ button {
   cursor: pointer;
   transition: 0.3s;
 }
+
 button:hover {
   background: #cc6e00;
 }
@@ -107,6 +117,7 @@ button:hover {
   transition: color 0.3s, transform 0.3s;
   text-shadow: 0 0 5px #ff8c00, 0 0 10px #ffcc66;
 }
+
 .switch-auth:hover {
   color: #fff;
   transform: scale(1.05);
@@ -121,4 +132,4 @@ button:hover {
   .glitch-text {
     font-size: 2rem;
   }
-} 
+}
