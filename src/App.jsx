@@ -9,6 +9,8 @@ import confetti from 'canvas-confetti';
 import axiosInstance from './utils/axios';
 
 function App() {
+
+
   const [isSignup, setIsSignup] = useState(false);
   const [signupStep, setSignupStep] = useState(1); // 1=email, 2=otp, 3=register
   const [arrows, setArrows] = useState([]);
@@ -42,10 +44,14 @@ function App() {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
+      console.log("gefe")
       setLoading(true);
-      const res = await axiosInstance.post('/auth/google-login', {
+      // Fix: Use the correct API endpoint
+      const res = await axiosInstance.post('/api/v1/auth/google-login', {
         credential: credentialResponse.credential,
+        withCredentials: true
       });
+      console.log(res)
       const { accessToken, user } = res.data;
       localStorage.setItem('token', accessToken);
       setLoggedInUser(user);
@@ -75,7 +81,7 @@ function App() {
         collegeName: formData.collegeName,
         rollNo: formData.rollNo,
       });
-      
+
       alert(response.data.message || 'OTP sent to your email');
       setSignupStep(2);
     } catch (error) {
@@ -94,7 +100,7 @@ function App() {
         email: formData.email,
         otp: formData.otp,
       });
-      
+
       // If verification successful, user is created and logged in
       const { accessToken, user } = response.data;
       localStorage.setItem('token', accessToken);
@@ -117,7 +123,7 @@ function App() {
         email: formData.email,
         password: formData.password,
       });
-      
+
       const { accessToken, user } = res.data;
       localStorage.setItem('token', accessToken);
       setLoggedInUser(user);
@@ -212,65 +218,65 @@ function App() {
                 <>
                   {signupStep === 1 && (
                     <form className="form" onSubmit={sendOtp}>
-                      <input 
-                        type="text" 
-                        name="username" 
-                        placeholder="Username" 
-                        value={formData.username} 
-                        onChange={handleChange} 
-                        required 
+                      <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
                       />
-                      <input 
-                        type="email" 
-                        name="email" 
-                        placeholder="Email" 
-                        value={formData.email} 
-                        onChange={handleChange} 
-                        required 
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
                       />
-                      <input 
-                        type="password" 
-                        name="password" 
-                        placeholder="Password" 
-                        value={formData.password} 
-                        onChange={handleChange} 
-                        required 
+                      <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
                       />
-                      <input 
-                        type="password" 
-                        name="confirmPassword" 
-                        placeholder="Confirm Password" 
-                        value={formData.confirmPassword} 
-                        onChange={handleChange} 
-                        required 
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirm Password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
                       />
-                      <input 
-                        type="text" 
-                        name="fullname" 
-                        placeholder="Full Name" 
-                        value={formData.fullname} 
-                        onChange={handleChange} 
-                        required 
+                      <input
+                        type="text"
+                        name="fullname"
+                        placeholder="Full Name"
+                        value={formData.fullname}
+                        onChange={handleChange}
+                        required
                       />
-                      <input 
-                        type="text" 
-                        name="collegeName" 
-                        placeholder="College Name" 
-                        value={formData.collegeName} 
-                        onChange={handleChange} 
+                      <input
+                        type="text"
+                        name="collegeName"
+                        placeholder="College Name"
+                        value={formData.collegeName}
+                        onChange={handleChange}
                       />
-                      <input 
-                        type="text" 
-                        name="rollNo" 
-                        placeholder="Roll Number (required for IITP students)" 
-                        value={formData.rollNo} 
-                        onChange={handleChange} 
+                      <input
+                        type="text"
+                        name="rollNo"
+                        placeholder="Roll Number (required for IITP students)"
+                        value={formData.rollNo}
+                        onChange={handleChange}
                       />
                       <button type="submit" disabled={loading || formData.password !== formData.confirmPassword}>
                         {loading ? 'Sending...' : 'Send OTP'}
                       </button>
                       {formData.password !== formData.confirmPassword && formData.confirmPassword && (
-                        <p style={{color: 'red', fontSize: '14px'}}>Passwords do not match</p>
+                        <p style={{ color: 'red', fontSize: '14px' }}>Passwords do not match</p>
                       )}
                       <div className="divider">OR</div>
                       <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => alert('Google OAuth Failed!')} />
@@ -279,22 +285,22 @@ function App() {
                   {signupStep === 2 && (
                     <form className="form" onSubmit={verifyOtp}>
                       <p>Enter the OTP sent to {formData.email}</p>
-                      <input 
-                        type="text" 
-                        name="otp" 
-                        placeholder="Enter 6-digit OTP" 
-                        value={formData.otp} 
-                        onChange={handleChange} 
+                      <input
+                        type="text"
+                        name="otp"
+                        placeholder="Enter 6-digit OTP"
+                        value={formData.otp}
+                        onChange={handleChange}
                         maxLength={6}
-                        required 
+                        required
                       />
                       <button type="submit" disabled={loading}>
                         {loading ? 'Verifying...' : 'Verify OTP & Register'}
                       </button>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => setSignupStep(1)}
-                        style={{marginTop: '10px', background: 'transparent', border: '1px solid #ccc'}}
+                        style={{ marginTop: '10px', background: 'transparent', border: '1px solid #ccc' }}
                       >
                         Back to Form
                       </button>
@@ -303,21 +309,21 @@ function App() {
                 </>
               ) : (
                 <form className="form" onSubmit={handleLogin}>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    placeholder="Email" 
-                    value={formData.email} 
-                    onChange={handleChange} 
-                    required 
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                   />
-                  <input 
-                    type="password" 
-                    name="password" 
-                    placeholder="Password" 
-                    value={formData.password} 
-                    onChange={handleChange} 
-                    required 
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
                   />
                   <button type="submit" disabled={loading}>
                     {loading ? 'Logging in...' : 'Login'}
@@ -327,9 +333,9 @@ function App() {
                 </form>
               )}
 
-              <p className="switch-auth" onClick={() => { 
-                setIsSignup(!isSignup); 
-                setSignupStep(1); 
+              <p className="switch-auth" onClick={() => {
+                setIsSignup(!isSignup);
+                setSignupStep(1);
                 setFormData({
                   email: '',
                   otp: '',
